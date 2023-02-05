@@ -1,0 +1,32 @@
+﻿@page "/"
+@using MauiDatabase.Models;
+@using MauiDatabase.Repositories;
+
+@inject INoteRepository NoteRepository
+
+<h1>Hello, world!</h1>
+
+<CreateNote OnNoteAdded="() => StateHasChanged()">
+</CreateNote>
+
+@if (!Notes?.Any() ?? true)
+{
+        <h3>There are no notes</h3>
+    return;
+}
+
+<ul>
+    @foreach (var note in Notes)
+    {
+            <li>@note.Content</li>
+    }
+</ul>
+
+@code {
+    public List<Note> Notes => NoteRepository.GetAllAsync().GetAwaiter().GetResult();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+}

@@ -1,0 +1,35 @@
+﻿@using MauiDatabase.Models;
+@using MauiDatabase.Repositories;
+
+
+@inject INoteRepository NoteRepository
+
+<div>
+    <input placeholder="Type note..." @bind=Model.Content />
+    <button @onclick="AddNoteAsync">Add Note</button>
+</div>
+
+@code {
+    public Note Model { get; set; }
+    [Parameter] public Action OnNoteAdded { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Model = new Note { };
+    }
+
+    public async Task AddNoteAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Model.Content)) return;
+
+        var result = await NoteRepository.CreateAsync(Model);
+
+        if (!result) return; // could log error or notify user
+
+        Model = new Note { };
+
+        OnNoteAdded?.Invoke();
+    }
+}
