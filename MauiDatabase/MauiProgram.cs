@@ -3,6 +3,7 @@ using MauiDatabase.Data;
 using Microsoft.EntityFrameworkCore;
 using MauiDatabase.Repositories;
 using MauiDatabase.Shared;
+using MauiDatabase.Utilities;
 
 namespace MauiDatabase;
 
@@ -31,6 +32,10 @@ public static class MauiProgram
 		builder.Services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 		builder.Services.AddSingleton(typeof(INoteRepository), typeof(NoteRepository));
 
-		return builder.Build();
+		var app = builder.Build();
+
+		app.SeedDatabase();
+
+		return app;
 	}
 }
